@@ -76,18 +76,14 @@ The data was cleaned and analysed using SQL before being used to create the Powe
 
 ## 6. Dashboard Screenshots
 
-The screenshots below will show the three pages of the completed Power BI dashboard.
+### 1. Readmission Overview
 
-### Readmission Overview
+![Readmission Overview Dashboard](dashboard/Readmission%20Overview.png)
 
-![Readmission Overview Dashboard](images/readmission-overview.png)
+### 2. Patient Risk Factors
 
-### Patient Risk Factors
+![Patient Risk Factors Dashboard](dashboard/Patient%20Risk%20Factors.png)
 
-![Patient Risk Factors Dashboard](images/patient-risk-factors.png)
+### 3. Diabetes Care and Treatment
 
-### Diabetes Care and Treatment
-
-![Diabetes Care and Treatment Dashboard](images/diabetes-care-treatment.png)
-
-*To display these images on GitHub, save your actual Power BI screenshots using the filenames shown above and upload them to an `images` folder in the repository. The image paths will work once the files exist at those locations.*
+![Diabetes Care and Treatment Dashboard](dashboard/Diabetes%20Care%20and%20Treatment.png)
