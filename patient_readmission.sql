@@ -1,4 +1,4 @@
--- Craeting database 
+-- Creating database 
 
 CREATE DATABASE patient_readmission;
 
