@@ -1,6 +1,10 @@
+-- Craeting database 
+
 CREATE DATABASE patient_readmission;
 
 USE patient_readmission;
+
+-- Preview the data
 
 SELECT COUNT(*) FROM diabetic_data;
 
@@ -8,13 +12,19 @@ SELECT *
 FROM diabetic_data
 LIMIT 10;
 
+-- Understand the columns
+
 DESCRIBE diabetic_data;
 
+-- Check the readmission categories
+ 
 SELECT readmitted, count(*) AS patient_count
 FROM diabetic_data
 GROUP BY readmitted
 ORDER BY patient_count DESC;
 
+-- Calculate readmission percentages
+ 
 SELECT 
 	readmitted, 
     count(*) AS encounter_count,
@@ -22,6 +32,8 @@ SELECT
 FROM diabetic_data
 GROUP BY readmitted
 ORDER BY encounter_count DESC;
+
+-- Check missing values
 
 SELECT
     COUNT(*) AS total_records,
@@ -53,6 +65,8 @@ SELECT
     END) AS missing_payer_code
 
 FROM diabetic_data;
+
+-- Check whether key analysis columns are reliable
 
 SELECT
     COUNT(*) AS total_records,
@@ -94,12 +108,16 @@ SELECT
 
 FROM diabetic_data;
 
+-- Check for duplicate records 
+
 SELECT
     COUNT(*) AS total_records,
     COUNT(DISTINCT encounter_id) AS unique_encounters,
     COUNT(*) - COUNT(DISTINCT encounter_id) AS duplicate_encounter_ids
 FROM diabetic_data;
 
+-- readmission by age group
+ 
 SELECT
     age,
     COUNT(*) AS total_encounters,
@@ -120,6 +138,8 @@ SELECT
 FROM diabetic_data
 GROUP BY age
 ORDER BY early_readmission_rate DESC;
+
+-- Analysing previous inpatient visits
 
 SELECT
     number_inpatient,
@@ -142,6 +162,8 @@ FROM diabetic_data
 GROUP BY number_inpatient
 ORDER BY number_inpatient;
 
+-- Analysing previous emergency visits
+
 SELECT
     number_emergency,
     COUNT(*) AS total_encounters,
@@ -162,6 +184,8 @@ SELECT
 FROM diabetic_data
 GROUP BY number_emergency
 ORDER BY number_emergency;
+
+-- Analysing previous outpatient visits
 
 SELECT
     number_outpatient,
@@ -184,6 +208,8 @@ FROM diabetic_data
 GROUP BY number_outpatient
 ORDER BY number_outpatient;
 
+-- Analysing readmission by length of hospital stay
+
 SELECT
     time_in_hospital,
     COUNT(*) AS total_encounters,
@@ -205,6 +231,8 @@ FROM diabetic_data
 GROUP BY time_in_hospital
 ORDER BY time_in_hospital;
 
+-- Analysing readmission by number of medications
+
 SELECT
     num_medications,
     COUNT(*) AS total_encounters,
@@ -225,6 +253,8 @@ SELECT
 FROM diabetic_data
 GROUP BY num_medications
 ORDER BY num_medications;
+
+-- Analysing readmission by primary diagnosis
 
 SELECT
     diag_1,
@@ -251,6 +281,8 @@ HAVING COUNT(*) >= 100
 ORDER BY early_readmission_rate DESC
 LIMIT 15;
 
+-- Analysing readmission by HbA1c test results 
+
 SELECT
     A1Cresult,
     COUNT(*) AS total_encounters,
@@ -272,6 +304,8 @@ FROM diabetic_data
 GROUP BY A1Cresult
 ORDER BY early_readmission_rate DESC;
 
+-- Does diabetes medication change relate to early readmission? 
+
 SELECT
     `change`,
     COUNT(*) AS total_encounters,
@@ -289,6 +323,8 @@ SELECT
 FROM diabetic_data
 GROUP BY `change`
 ORDER BY early_readmission_rate DESC;
+
+-- Does diabetes medication status relate to early readmission?
 
 SELECT
     diabetesMed,
@@ -311,6 +347,8 @@ SELECT
 FROM diabetic_data
 GROUP BY diabetesMed
 ORDER BY early_readmission_rate DESC;
+
+-- Which discharge destinations have higher early readmission rates?
 
 SELECT
     discharge_disposition_id,
@@ -335,6 +373,8 @@ GROUP BY discharge_disposition_id
 HAVING COUNT(*) >= 100
 ORDER BY early_readmission_rate DESC;
 
+-- analysing admission type
+
 SELECT
     admission_type_id,
     COUNT(*) AS total_encounters,
@@ -357,12 +397,16 @@ FROM diabetic_data
 GROUP BY admission_type_id
 ORDER BY early_readmission_rate DESC;
 
+-- Analysing discharge disposition codes properly 
+
 SELECT
     discharge_disposition_id,
     COUNT(*) AS total_encounters
 FROM diabetic_data
 GROUP BY discharge_disposition_id
 ORDER BY total_encounters DESC;
+
+-- Decoding the discharge destination IDs
 
 SELECT
     discharge_disposition_id,
@@ -382,6 +426,8 @@ FROM diabetic_data
 GROUP BY discharge_disposition_id
 HAVING COUNT(*) >= 1000
 ORDER BY early_readmission_rate DESC;
+
+-- Early readmission by admission source 
 
 SELECT
     admission_source_id,
@@ -406,6 +452,8 @@ GROUP BY admission_source_id
 HAVING COUNT(*) >= 100
 ORDER BY early_readmission_rate DESC;
 
+-- Analysing the number of diagnoses
+
 SELECT
     number_diagnoses,
     COUNT(*) AS total_encounters,
@@ -428,6 +476,8 @@ FROM diabetic_data
 GROUP BY number_diagnoses
 ORDER BY number_diagnoses;
 
+-- Analysing the number of lab procedures
+
 SELECT
     num_lab_procedures,
     COUNT(*) AS total_encounters,
@@ -449,6 +499,8 @@ SELECT
 FROM diabetic_data
 GROUP BY num_lab_procedures
 ORDER BY num_lab_procedures;
+
+-- Group lab procedures into ranges
 
 SELECT
     CASE
@@ -478,6 +530,8 @@ FROM diabetic_data
 GROUP BY lab_procedure_band
 ORDER BY MIN(num_lab_procedures);
 
+-- Analysing the number of procedures performed
+
 SELECT
     num_procedures,
     COUNT(*) AS total_encounters,
@@ -499,6 +553,8 @@ SELECT
 FROM diabetic_data
 GROUP BY num_procedures
 ORDER BY num_procedures;
+
+-- patient's race
 
 SELECT
     race,
@@ -522,6 +578,8 @@ FROM diabetic_data
 GROUP BY race
 ORDER BY early_readmission_rate DESC;
 
+-- Analysing early readmission by gender
+
 SELECT
     gender,
     COUNT(*) AS total_encounters,
@@ -543,6 +601,8 @@ SELECT
 FROM diabetic_data
 GROUP BY gender
 ORDER BY early_readmission_rate DESC;
+
+-- Analysing early readmission by age group
 
 SELECT
     race,
@@ -568,6 +628,8 @@ WHERE race <> '?'
 GROUP BY race, age
 HAVING COUNT(*) >= 100
 ORDER BY early_readmission_rate DESC;
+
+-- Analysing race and gender together
 
 SELECT
     race,
@@ -595,6 +657,8 @@ GROUP BY race, gender
 HAVING COUNT(*) >= 100
 ORDER BY early_readmission_rate DESC;
 
+-- Checking the overall readmission picture
+
 SELECT
     readmitted,
     COUNT(*) AS total_encounters,
@@ -606,6 +670,11 @@ SELECT
 FROM diabetic_data
 GROUP BY readmitted
 ORDER BY total_encounters DESC;
+
+-- Data cleaning: Step 1 of validation
+-- Goal: Check whether important columns contain unexpected values.
+-- We'll start with readmitted, gender, and age. 
+-- These are important because they describe our target outcome and patient demographics. 
 
 SELECT
     'readmitted' AS column_name,
@@ -633,6 +702,8 @@ FROM diabetic_data
 GROUP BY age
 
 ORDER BY column_name, column_value;
+
+-- Step 2: Checking numerical values
 
 SELECT
     'time_in_hospital' AS column_name,
@@ -682,6 +753,8 @@ SELECT
     SUM(num_medications < 0)
 FROM diabetic_data;
 
+-- Step 3: Validating the remaining key numerical columns 
+
 SELECT
     'number_diagnoses' AS column_name,
     MIN(number_diagnoses) AS minimum_value,
@@ -709,6 +782,8 @@ SELECT
     SUM(num_procedures IS NULL),
     SUM(num_procedures < 0)
 FROM diabetic_data;
+
+-- Step 4: Checking categorical fields for missing or unexpected values
 
 SELECT
     'race' AS column_name,
@@ -746,6 +821,8 @@ GROUP BY diabetesMed
 
 ORDER BY column_name, column_value;
 
+-- Step 5: Checking for missing markers across the other important columns
+
 SELECT
     SUM(race = '?') AS missing_race,
     SUM(gender = 'Unknown/Invalid') AS invalid_gender,
@@ -756,6 +833,8 @@ SELECT
     SUM(diag_2 = '?') AS missing_diag_2,
     SUM(diag_3 = '?') AS missing_diag_3
 FROM diabetic_data;
+
+-- Step 6: Checking whether the table contains duplicate records
 
 SELECT
     COUNT(*) AS total_rows,
@@ -777,11 +856,15 @@ SELECT
     )) AS distinct_combinations
 FROM diabetic_data;
 
+-- Step 7: Final validation of the target column
+
 SELECT
     COUNT(*) AS total_rows,
     SUM(readmitted IS NULL) AS null_readmitted,
     SUM(readmitted NOT IN ('NO', '<30', '>30')) AS unexpected_labels
 FROM diabetic_data;
+
+-- Completing the remaining data-cleaning checks
 
 SELECT
     'diag_1' AS column_name,
@@ -808,12 +891,16 @@ SELECT
     SUM(`diag_3` = '?')
 FROM diabetic_data;
 
+-- Validating categorical values
+
 SELECT
     metformin,
     COUNT(*) AS record_count
 FROM diabetic_data
 GROUP BY metformin
 ORDER BY record_count DESC;
+
+-- Checking all medication columns together
 
 SELECT
     SUM(
@@ -910,12 +997,16 @@ SELECT
     ) AS metformin_pioglitazone_unexpected
 FROM diabetic_data;
 
+-- Validating the remaining categorical fields
+
 SELECT
     max_glu_serum,
     COUNT(*) AS record_count
 FROM diabetic_data
 GROUP BY max_glu_serum
 ORDER BY record_count DESC;
+
+-- Checking medication summary fields
 
 SELECT
     'admission_type_id' AS column_name,
@@ -941,6 +1032,8 @@ SELECT
     MAX(admission_source_id),
     SUM(admission_source_id IS NULL)
 FROM diabetic_data;
+
+-- Checking which codes actually exist
 
 SELECT
     'admission_type_id' AS column_name,
@@ -969,6 +1062,8 @@ GROUP BY admission_source_id
 
 ORDER BY column_name, code;
 
+-- Validating the remaining clinical result categories
+
 SELECT
     SUM(race <> TRIM(race)) AS race_with_extra_spaces,
     SUM(gender <> TRIM(gender)) AS gender_with_extra_spaces,
@@ -979,12 +1074,16 @@ SELECT
     SUM(diag_3 <> TRIM(diag_3)) AS diag_3_with_extra_spaces
 FROM diabetic_data;
 
+-- Checking exact duplicate rows across weight column
+
 SELECT
     weight,
     COUNT(*) AS record_count
 FROM diabetic_data
 GROUP BY weight
 ORDER BY record_count DESC;
+
+-- Validating medical_specialty
 
 SELECT
     medical_specialty,
@@ -994,12 +1093,16 @@ GROUP BY medical_specialty
 ORDER BY record_count DESC
 LIMIT 20;
 
+-- Validating payer_code
+
 SELECT
     payer_code,
     COUNT(*) AS record_count
 FROM diabetic_data
 GROUP BY payer_code
 ORDER BY record_count DESC;
+
+-- Final check for invalid patient identifiers
 
 SELECT
     COUNT(*) AS total_rows,
@@ -1010,11 +1113,15 @@ SELECT
     COUNT(DISTINCT encounter_id) AS distinct_encounter_ids
 FROM diabetic_data;
 
+-- Checking repeated patients
+
 SELECT
     COUNT(DISTINCT patient_nbr) AS unique_patients,
     COUNT(*) AS total_encounters,
     COUNT(*) - COUNT(DISTINCT patient_nbr) AS encounters_beyond_one_per_patient
 FROM diabetic_data;
+
+-- Checking how often patients appear
 
 SELECT
     patient_encounters,
@@ -1029,11 +1136,15 @@ FROM (
 GROUP BY patient_encounters
 ORDER BY patient_encounters;
 
+-- Check exact duplicate rows in MySQL
+
 SELECT
     COUNT(*) AS total_columns
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_SCHEMA = 'patient_readmission'
   AND TABLE_NAME = 'diabetic_data';
+
+-- Generating a full-row duplicate-check query
 
 SET SESSION group_concat_max_len = 100000;
 
@@ -1057,6 +1168,8 @@ PREPARE duplicate_check FROM @duplicate_check_sql;
 EXECUTE duplicate_check;
 DEALLOCATE PREPARE duplicate_check;
 
+-- Validating max_glu_serum and A1Cresult against expected categories
+
 SELECT
     'change' AS column_name,
     `change` AS category,
@@ -1075,6 +1188,8 @@ GROUP BY diabetesMed
 
 ORDER BY column_name, category;
 
+-- Checking the remaining text fields for unknown values
+
 SELECT
     SUM(admission_type_id IS NULL) AS missing_admission_type,
     SUM(discharge_disposition_id IS NULL) AS missing_discharge_disposition,
@@ -1084,6 +1199,8 @@ SELECT
     SUM(max_glu_serum IS NULL) AS missing_max_glu_serum,
     SUM(A1Cresult IS NULL) AS missing_A1Cresult
 FROM diabetic_data;
+
+-- EDA
 
 SELECT
     number_inpatient,
@@ -1099,6 +1216,8 @@ FROM diabetic_data
 GROUP BY number_inpatient
 ORDER BY number_inpatient;
 
+-- Comparing all three outcomes by length of hospital stay
+
 SELECT
     time_in_hospital,
     COUNT(*) AS total_encounters,
@@ -1112,6 +1231,8 @@ SELECT
 FROM diabetic_data
 GROUP BY time_in_hospital
 ORDER BY time_in_hospital;
+
+-- Number of diagnoses vs. readmission
 
 SELECT
     number_diagnoses,
@@ -1127,6 +1248,8 @@ FROM diabetic_data
 GROUP BY number_diagnoses
 ORDER BY number_diagnoses;
 
+-- Number of medications vs. readmission
+
 SELECT
     num_medications,
     COUNT(*) AS total_encounters,
@@ -1140,6 +1263,8 @@ SELECT
 FROM diabetic_data
 GROUP BY num_medications
 ORDER BY num_medications;
+
+-- Grouping medication counts into ranges
 
 SELECT
     CASE
@@ -1159,6 +1284,8 @@ SELECT
 FROM diabetic_data
 GROUP BY medication_group
 ORDER BY MIN(num_medications);
+
+-- Grouping previous inpatient visits
 
 SELECT
     CASE
@@ -1180,6 +1307,8 @@ FROM diabetic_data
 GROUP BY inpatient_visit_group
 ORDER BY MIN(number_inpatient);
 
+-- EDA: Previous emergency visits vs. early readmission
+
 SELECT
     CASE
         WHEN number_emergency = 0 THEN '0'
@@ -1199,6 +1328,8 @@ FROM diabetic_data
 GROUP BY emergency_visit_group
 ORDER BY MIN(number_emergency);
 
+-- Verify the readmission outcome totals
+
 SELECT
     readmitted,
     COUNT(*) AS total_encounters,
@@ -1216,6 +1347,8 @@ ORDER BY
         ELSE 4
     END;
 
+-- Checking unknown-value markers
+
 SELECT
     SUM(CASE WHEN race = '?' THEN 1 ELSE 0 END)
         AS unknown_race,
@@ -1232,6 +1365,8 @@ SELECT
     SUM(CASE WHEN diag_3 = '?' THEN 1 ELSE 0 END)
         AS unknown_diag_3
 FROM diabetic_data;
+
+-- Check other categorical fields for unexpected values
 
 SELECT
     'readmitted' AS column_name,
@@ -1260,6 +1395,8 @@ GROUP BY diabetesMed
 
 ORDER BY column_name, category;
 
+-- Checking for remaining SQL NULL values
+
 SELECT
     SUM(CASE WHEN time_in_hospital IS NULL THEN 1 ELSE 0 END)
         AS missing_time_in_hospital,
@@ -1279,11 +1416,12 @@ SELECT
         AS missing_number_diagnoses
 FROM diabetic_data;
 
+-- Creating a cleaned SQL view
+
 SHOW FULL TABLES
 WHERE Tables_in_patient_readmission = 'diabetic_data_clean';
 
 SHOW COLUMNS FROM diabetic_data;
-
 
 CREATE VIEW diabetic_data_clean AS
 SELECT
@@ -1341,6 +1479,10 @@ SELECT
     readmitted
 FROM diabetic_data;
 
+SHOW COLUMNS FROM diabetic_data;
+
+-- Validating the cleaned view
+
 SELECT
     COUNT(*) AS total_encounters,
     COUNT(DISTINCT encounter_id) AS unique_encounters,
@@ -1360,6 +1502,8 @@ SELECT
         AS missing_diag_3
 FROM diabetic_data_clean;
 
+-- Verifying the readmission outcome in the cleaned view
+
 SELECT
     readmitted,
     COUNT(*) AS total_encounters,
@@ -1376,6 +1520,8 @@ ORDER BY
         ELSE 4
     END;
 
+-- Checking whether weight should be retained
+
 SELECT
     COUNT(*) AS total_encounters,
     SUM(CASE WHEN weight IS NOT NULL THEN 1 ELSE 0 END)
@@ -1386,6 +1532,8 @@ SELECT
         2
     ) AS known_weight_percentage
 FROM diabetic_data_clean;
+
+-- Assessing the other fields with high missingness
 
 SELECT
     COUNT(*) AS total_encounters,
@@ -1402,6 +1550,8 @@ SELECT
         * 100.0 / COUNT(*), 2
     ) AS known_specialty_percentage
 FROM diabetic_data_clean;
+
+-- Checking the remaining diagnosis unknowns
 
 SELECT
     COUNT(*) AS total_encounters,
@@ -1429,6 +1579,8 @@ SELECT
 
 FROM diabetic_data_clean;
 
+-- Glucose-test fields
+
 SELECT
     'max_glu_serum' AS column_name,
     max_glu_serum AS category,
@@ -1447,6 +1599,7 @@ GROUP BY A1Cresult
 
 ORDER BY column_name, category;
 
+-- Medication validation
 
 SELECT
     medication,
